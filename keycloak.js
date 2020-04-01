@@ -54,6 +54,25 @@ KeycloakClientApi.prototype.getUsersForGroup = function (groupId) {
     });
 };
 
+KeycloakClientApi.prototype.getUsers = function (groupId) {
+
+    var config = this.config;
+
+    return this.session().then(function(token) {
+        var options = {
+            url: config.url + "/auth/admin/realms/" + config.realm + "/users?max=1000",
+            headers: {
+                "Authorization" : "bearer " + token
+            },
+            json: true
+        }
+        return request(options).catch((err) => {
+            console.log("getUsers() Error calling keycloak", err);
+            token = undefined;
+        });
+    });
+};
+
 KeycloakClientApi.prototype.session = function () {
     var config = this.config;
 
